@@ -5,4 +5,6 @@ comment1.params=
 comment1.target=gameOfLife()
 comment2.params=board\ Rows\ Columns
 comment2.target=void\ nextGeneration(int[][],\ int,\ int)
-numComments=3
+comment3.params=
+comment3.target=void\ printFuture()
+numComments=4
