@@ -1,3 +1,6 @@
+//14/06/2022
+
+
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Random;
@@ -40,7 +43,7 @@ public class gameOfLife
     int numberFix;
     public gameOfLife() {
         System.out.println('\u000c');
-        
+
         slowPrint("How many rows and columns do you want? only input one number.");
         Scanner keyboardIn = new Scanner(System.in);
 
@@ -52,9 +55,9 @@ public class gameOfLife
         System.out.println();
         board = new int[Rows][Columns];
         printBoard( board, Rows, Columns);
-       
+
         while (menuScreen == true){
-            slowPrint("Do you want to enter selction screen? type yes if, yes. no if, no. if you want to quit the program, quit");
+            slowPrint("Do you want to enter selection screen? type yes if, yes. no if, no. if you want to quit the program, quit");
 
             String keyInput = keyboardIn.nextLine().toLowerCase();
 
@@ -65,7 +68,7 @@ public class gameOfLife
             else if(keyInput.equalsIgnoreCase("no")){
                 nextGeneration(board, Columns, Rows);
             }
-            
+
             else if (keyInput.equalsIgnoreCase("quit")){
                 menuScreen = false;
                 return;
@@ -83,12 +86,12 @@ public class gameOfLife
                 slowPrint("Please select column: ");
                 int columnSelection = keyboardIn.nextInt();
 
-                if (board[rowSelection][columnSelection] == 0){
-                    board[rowSelection][columnSelection] = 1;
+                if (board[rowSelection-1][columnSelection-1] == 0){
+                    board[rowSelection-1][columnSelection-1] = 1;
                 }
                 else
                 {
-                    board[rowSelection][columnSelection] = 0;
+                    board[rowSelection-1][columnSelection-1] = 0;
 
                 }
                 for(int yModifer= 0; yModifer<Columns; yModifer++){
@@ -102,13 +105,9 @@ public class gameOfLife
                 selectionScreen=false;
             }
 
-
         }            
         nextGeneration(board, Columns, Rows);
     }
-
-   
-   
 
    
    
@@ -153,7 +152,7 @@ public class gameOfLife
             if (Arrays.deepEquals(board, future)){
                 slowPrint("Simulation over");
                 return;
-                
+
             }
             board = future;
 
@@ -181,9 +180,9 @@ public class gameOfLife
                 for (int yModifer= -1; yModifer<= 1; yModifer++)
                     for (int xModifer = -1; xModifer <= 1; xModifer++)
                         if ((y+yModifer>=0 && y+yModifer<Rows) && (x+xModifer>=0 && x+xModifer<Columns)){
-                        
-                        aliveNeighbours += board[y+ yModifer][x+ xModifer];
-                    }
+
+                            aliveNeighbours += board[y+ yModifer][x+ xModifer];
+                        }
                 aliveNeighbours -= board[y][x];
                 // Cell is lonely and dies
                 if ((board[y][x] == 1) && (aliveNeighbours < 2))
@@ -232,7 +231,7 @@ public class gameOfLife
             }
         }
     }
-   
+
     void printBoard (int board[][], int Rows, int Columns){
         //board = new int[Rows][Columns];
         for(int yModifer= 0; yModifer<Columns; yModifer++){
