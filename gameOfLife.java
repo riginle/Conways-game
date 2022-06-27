@@ -1,11 +1,14 @@
-//14/06/2022
-
 
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
+import java.io.*;
+import java.util.*;
+import java.lang.Object;
 /**
  * Write a description of class gameOfLife here.
  *
@@ -37,30 +40,67 @@ public class gameOfLife
     int timerInput;
     int[][] future;
     int board[][];
-    int aliveInput;
+    String aliveInput;
     int countDead;
     int genInput;
     int numberFix;
+    int size = 5;
+    String keyInput;
+    int Columns;
+    int Rows;
+                Scanner keyboardIn = new Scanner(System.in);
+
     public gameOfLife() {
         System.out.println('\u000c');
-
-        slowPrint("How many rows and columns do you want? only input one number.");
-        Scanner keyboardIn = new Scanner(System.in);
-
-        int Columns = keyboardIn.nextInt();
-        keyboardIn.nextLine();
-        int Rows = Columns;
-
-        slowPrint("This is the board");
-        System.out.println();
         board = new int[Rows][Columns];
-        printBoard( board, Rows, Columns);
+        slowPrint("Would you like to use a seed?");
+        keyInput = keyboardIn.nextLine().toLowerCase();
+        
+        if (keyInput.equalsIgnoreCase("yes")){
+            slowPrint("How many rows and columns do you want? only input one number.");
+
+            Scanner keyboardIn = new Scanner(System.in);
+            System.out.println();
+            Columns = keyboardIn.nextInt();
+            keyboardIn.nextLine();
+            Rows = Columns;
+            slowPrint("This is the board");
+            System.out.println();
+            board = new int[Rows][Columns];
+            trySeedFile();
+            printBoard( board, Rows, Columns);
+
+        }
+
+        else if(keyInput.equalsIgnoreCase("no")){
+            slowPrint("How many rows and columns do you want? only input one number.");
+
+            Scanner keyboardIn = new Scanner(System.in);
+            System.out.println();
+            Columns = keyboardIn.nextInt();
+            keyboardIn.nextLine();
+            Rows = Columns;
+            slowPrint("This is the board");
+            System.out.println();
+            board = new int[Rows][Columns];
+            printRandBoard( board, Rows, Columns);
+        }
+
+     
+        
+
+        else {
+            slowPrint("Invalid command");
+        }
+
+        
+                
 
         while (menuScreen == true){
+            
+           
             slowPrint("Do you want to enter selection screen? type yes if, yes. no if, no. if you want to quit the program, quit");
-
-            String keyInput = keyboardIn.nextLine().toLowerCase();
-
+             keyInput = keyboardIn.nextLine().toLowerCase();
             if (keyInput.equalsIgnoreCase("yes")){
                 selectionScreen = true;
             }
@@ -85,6 +125,7 @@ public class gameOfLife
                 int rowSelection = keyboardIn.nextInt();
                 slowPrint("Please select column: ");
                 int columnSelection = keyboardIn.nextInt();
+                keyboardIn.nextLine();
 
                 if (board[rowSelection-1][columnSelection-1] == 0){
                     board[rowSelection-1][columnSelection-1] = 1;
@@ -109,9 +150,6 @@ public class gameOfLife
         nextGeneration(board, Columns, Rows);
     }
 
-   
-   
-   
     public void nextGeneration(int board[][], int Rows, int Columns)
     {
 
@@ -127,15 +165,15 @@ public class gameOfLife
 
         numberFix = 20;
 
+        slowPrint("What would you like to represent your alive cells?");
+
+        aliveInput = keyboardIn.nextLine();
+
         slowPrint("How many miliseconds between generations would you like?");
 
         timerInput = keyboardIn.nextInt();
 
         keyboardIn.nextLine();
-
-        slowPrint("What would you like to represent your alive cells?");
-
-        String aliveInput = keyboardIn.nextLine();
 
         for (int Gen = 0; Gen < genInput; Gen++)
         {
@@ -231,8 +269,20 @@ public class gameOfLife
             }
         }
     }
-
+    //for the seed print 
     void printBoard (int board[][], int Rows, int Columns){
+        //board = new int[Rows][Columns];
+        for(int yModifer= 0; yModifer<Columns; yModifer++){
+            for(int xModifer = 0; xModifer<Rows; xModifer++){
+                //board[yModifer][xModifer] = (rand.nextInt(2))*(rand.nextInt(2));
+                slowPrint(board [yModifer] [xModifer] + "  ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+    
+    void printRandBoard (int board[][], int Rows, int Columns){
         //board = new int[Rows][Columns];
         for(int yModifer= 0; yModifer<Columns; yModifer++){
             for(int xModifer = 0; xModifer<Rows; xModifer++){
@@ -243,4 +293,29 @@ public class gameOfLife
         }
         System.out.println();
     }
+    
+    void trySeedFile(){
+        //defines file
+        File seed = new File("ConwaysFile.txt");
+
+        try{
+            //creates scanner
+            Scanner fileReader = new Scanner(seed);
+            //code that takes the 20x20 grid in character by character and places into array
+            for (int seedY = 0; seedY<size; seedY++){
+                //reads next line
+                String fileString  = fileReader.nextLine();
+                for (int seedX = 0; seedX<size; seedX++){
+                    //board[seedY][seedX] = Integer.parseInt(""+fileString.charAt(seedX));
+
+                    //takes the unicode character for "0" and subtracts the numerical value of the cell selected. if subtracted from itself, it gives 0, and if subtracted from "1", gives 1.
+                    board[seedY][seedX]=fileString.charAt(seedX)-'0';
+                }
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
 }
