@@ -48,59 +48,56 @@ public class gameOfLife
     String keyInput;
     int Columns;
     int Rows;
-                Scanner keyboardIn = new Scanner(System.in);
+    Scanner keyboardIn ;
+    boolean seedSelection = true; 
 
     public gameOfLife() {
         System.out.println('\u000c');
         board = new int[Rows][Columns];
         slowPrint("Would you like to use a seed?");
-        keyInput = keyboardIn.nextLine().toLowerCase();
+        keyboardIn = new Scanner(System.in);
         
-        if (keyInput.equalsIgnoreCase("yes")){
-            slowPrint("How many rows and columns do you want? only input one number.");
+        while (seedSelection == true){
+            keyInput = keyboardIn.nextLine().toLowerCase();
+            if (keyInput.equalsIgnoreCase("yes")){
+                slowPrint("How many rows and columns do you want? only input one number. if it is smaller dimensions than the seed it will not work.");
 
-            Scanner keyboardIn = new Scanner(System.in);
-            System.out.println();
-            Columns = keyboardIn.nextInt();
-            keyboardIn.nextLine();
-            Rows = Columns;
-            slowPrint("This is the board");
-            System.out.println();
-            board = new int[Rows][Columns];
-            trySeedFile();
-            printBoard( board, Rows, Columns);
+                Scanner keyboardIn = new Scanner(System.in);
+                System.out.println();
+                Columns = removeChar(keyboardIn.nextLine());
+                Rows = Columns;
+                slowPrint("This is the board");
+                System.out.println();
+                board = new int[Rows][Columns];
+                trySeedFile();
+                printBoard( board, Rows, Columns);
+                seedSelection = false;
+            }
 
-        }
+            else if(keyInput.equalsIgnoreCase("no")){
+                slowPrint("How many rows and columns do you want? only input one number.");
 
-        else if(keyInput.equalsIgnoreCase("no")){
-            slowPrint("How many rows and columns do you want? only input one number.");
+                Scanner keyboardIn = new Scanner(System.in);
+                System.out.println();
+                Columns = removeChar(keyboardIn.nextLine());
+                Rows = Columns;
+                slowPrint("This is the board");
+                System.out.println();
+                board = new int[Rows][Columns];
+                printRandBoard( board, Rows, Columns);
+                seedSelection = false;
+            }
 
-            Scanner keyboardIn = new Scanner(System.in);
-            System.out.println();
-            Columns = keyboardIn.nextInt();
-            keyboardIn.nextLine();
-            Rows = Columns;
-            slowPrint("This is the board");
-            System.out.println();
-            board = new int[Rows][Columns];
-            printRandBoard( board, Rows, Columns);
-        }
-
-     
-        
-
-        else {
-            slowPrint("Invalid command");
-        }
-
-        
+            else {
+                slowPrint("Invalid command");
                 
+            }
+        }
 
         while (menuScreen == true){
-            
-           
+
             slowPrint("Do you want to enter selection screen? type yes if, yes. no if, no. if you want to quit the program, quit");
-             keyInput = keyboardIn.nextLine().toLowerCase();
+            keyInput = keyboardIn.nextLine().toLowerCase();
             if (keyInput.equalsIgnoreCase("yes")){
                 selectionScreen = true;
             }
@@ -122,9 +119,9 @@ public class gameOfLife
             while (selectionScreen == true){
 
                 slowPrint("Please select row: ");
-                int rowSelection = keyboardIn.nextInt();
+                int rowSelection = removeChar(keyboardIn.nextLine());
                 slowPrint("Please select column: ");
-                int columnSelection = keyboardIn.nextInt();
+                int columnSelection = removeChar(keyboardIn.nextLine());
                 keyboardIn.nextLine();
 
                 if (board[rowSelection-1][columnSelection-1] == 0){
@@ -159,21 +156,13 @@ public class gameOfLife
 
         slowPrint("How many Generations would you like?");
 
-        genInput = keyboardIn.nextInt();
-
-        keyboardIn.nextLine();
+        genInput = removeChar(keyboardIn.nextLine());
 
         numberFix = 20;
-
         slowPrint("What would you like to represent your alive cells?");
-
         aliveInput = keyboardIn.nextLine();
-
         slowPrint("How many miliseconds between generations would you like?");
-
-        timerInput = keyboardIn.nextInt();
-
-        keyboardIn.nextLine();
+        timerInput = removeChar(keyboardIn.nextLine());
 
         for (int Gen = 0; Gen < genInput; Gen++)
         {
@@ -281,7 +270,7 @@ public class gameOfLife
         }
         System.out.println();
     }
-    
+
     void printRandBoard (int board[][], int Rows, int Columns){
         //board = new int[Rows][Columns];
         for(int yModifer= 0; yModifer<Columns; yModifer++){
@@ -293,7 +282,7 @@ public class gameOfLife
         }
         System.out.println();
     }
-    
+
     void trySeedFile(){
         //defines file
         File seed = new File("ConwaysFile.txt");
@@ -318,4 +307,22 @@ public class gameOfLife
         }
     }
 
+    int removeChar(String stringInput){
+        //removes all values that aren't between 0-9
+        String numberOnly = stringInput.replaceAll("[^0-9]","");
+        if(numberOnly.equals("")){
+            //if value is invalid/lesser than 0, returns safe number of 20
+            System.out.println("Invalid input. setting to default of 20.");
+            return 20;
+        }
+        int numberValue = Integer.parseInt(numberOnly);
+        if(numberValue <= 0){
+            //if value is invalid/lesser than 0, returns safe number of 20
+            System.out.println("Invalid input. setting to default of 20.");
+            return 20;
+        }else{
+            //returns value without characters
+            return numberValue;
+        }
+    }
 }
