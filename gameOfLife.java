@@ -35,6 +35,8 @@ public class gameOfLife
     // { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     // { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
     // };
+
+    //varibles below 
     boolean selectionScreen = false;
     boolean menuScreen = true;
     int timerInput;
@@ -43,6 +45,7 @@ public class gameOfLife
     String aliveInput;
     int countDead;
     int genInput;
+    int defultNumber;
     int numberFix;
     int size = 5;
     String keyInput;
@@ -56,12 +59,11 @@ public class gameOfLife
         board = new int[Rows][Columns];
         slowPrint("Would you like to use a seed?");
         keyboardIn = new Scanner(System.in);
-        
+
         while (seedSelection == true){
             keyInput = keyboardIn.nextLine().toLowerCase();
             if (keyInput.equalsIgnoreCase("yes")){
                 slowPrint("How many rows and columns do you want? only input one number. if it is smaller dimensions than the seed it will not work.");
-
                 Scanner keyboardIn = new Scanner(System.in);
                 System.out.println();
                 Columns = removeChar(keyboardIn.nextLine());
@@ -73,10 +75,8 @@ public class gameOfLife
                 printBoard( board, Rows, Columns);
                 seedSelection = false;
             }
-
             else if(keyInput.equalsIgnoreCase("no")){
                 slowPrint("How many rows and columns do you want? only input one number.");
-
                 Scanner keyboardIn = new Scanner(System.in);
                 System.out.println();
                 Columns = removeChar(keyboardIn.nextLine());
@@ -87,10 +87,8 @@ public class gameOfLife
                 printRandBoard( board, Rows, Columns);
                 seedSelection = false;
             }
-
             else {
                 slowPrint("Invalid command");
-                
             }
         }
 
@@ -110,7 +108,6 @@ public class gameOfLife
                 menuScreen = false;
                 return;
             }
-
             else {
                 slowPrint("Invalid command");
             }
@@ -149,9 +146,6 @@ public class gameOfLife
 
     public void nextGeneration(int board[][], int Rows, int Columns)
     {
-
-        countDead = 0;
-
         Scanner keyboardIn = new Scanner(System.in);
 
         slowPrint("How many Generations would you like?");
@@ -161,6 +155,7 @@ public class gameOfLife
         numberFix = 20;
         slowPrint("What would you like to represent your alive cells?");
         aliveInput = keyboardIn.nextLine();
+
         slowPrint("How many miliseconds between generations would you like?");
         timerInput = removeChar(keyboardIn.nextLine());
 
@@ -172,9 +167,9 @@ public class gameOfLife
             System.out.println('\u000c');
             System.out.println("There are " + Gen + " Generations");
 
-            conwaysRules(board, Rows,  Columns);
+            conwaysRules(board, Rows, Columns);
 
-            printAlive(board, Rows,  Columns);
+            printAlive(board, Rows, Columns);
 
             if (Arrays.deepEquals(board, future)){
                 slowPrint("Simulation over");
@@ -194,7 +189,7 @@ public class gameOfLife
 
         }
     }
-
+    
     void conwaysRules(int board[][], int Rows, int Columns){
         future = new int[Rows][Columns];
 
@@ -211,6 +206,13 @@ public class gameOfLife
                             aliveNeighbours += board[y+ yModifer][x+ xModifer];
                         }
                 aliveNeighbours -= board[y][x];
+
+                //there are 4 rules to conways game of life
+                //Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+                //Any live cell with two or three live neighbours lives on to the next generation.
+                //Any live cell with more than three live neighbours dies, as if by overpopulation.
+                //Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+
                 // Cell is lonely and dies
                 if ((board[y][x] == 1) && (aliveNeighbours < 2))
                     future[y][x] = 0;
@@ -227,13 +229,14 @@ public class gameOfLife
             }
         }
     }
-
+    //this method uses a nested loop to go through future board then looks if a cell is a 1, if so it will print with the string varible in place of the 1, if a 0 it will leave the space empty
+    //it prints out the alive cells and leaves the dead cells empty 
     void printAlive(int board[][], int Rows, int Columns){
         for(int yModifer = 0; yModifer<Columns; yModifer++){
             for(int xModifer = 0; xModifer<Rows; xModifer++){
 
                 if(future[yModifer][xModifer] == 1){
-                    System.out.print(""+ aliveInput +" ");
+                    System.out.print(aliveInput +" ");
                 }
                 else{
                     System.out.print("  ");
@@ -244,7 +247,7 @@ public class gameOfLife
         }
         System.out.println();
     }
-
+    //used to make the text printing look nicer
     public static void slowPrint(String output) {
         // this is for making text print out slower
         // it was taken from the internet i do not understand how it works (it just looks nice)        
@@ -259,8 +262,10 @@ public class gameOfLife
         }
     }
     //for the seed print 
+    //goes through board and prints it
     void printBoard (int board[][], int Rows, int Columns){
         //board = new int[Rows][Columns];
+        //nested loop which prints out the bored
         for(int yModifer= 0; yModifer<Columns; yModifer++){
             for(int xModifer = 0; xModifer<Rows; xModifer++){
                 //board[yModifer][xModifer] = (rand.nextInt(2))*(rand.nextInt(2));
@@ -270,7 +275,8 @@ public class gameOfLife
         }
         System.out.println();
     }
-
+    //for the random print
+    //nested loop which randomly fills the baorded with a 1 or 0 then prints it out
     void printRandBoard (int board[][], int Rows, int Columns){
         //board = new int[Rows][Columns];
         for(int yModifer= 0; yModifer<Columns; yModifer++){
@@ -308,18 +314,19 @@ public class gameOfLife
     }
 
     int removeChar(String stringInput){
+        defultNumber = 20;
         //removes all values that aren't between 0-9
         String numberOnly = stringInput.replaceAll("[^0-9]","");
         if(numberOnly.equals("")){
             //if value is invalid/lesser than 0, returns safe number of 20
             System.out.println("Invalid input. setting to default of 20.");
-            return 20;
+            return defultNumber;
         }
         int numberValue = Integer.parseInt(numberOnly);
         if(numberValue <= 0){
             //if value is invalid/lesser than 0, returns safe number of 20
             System.out.println("Invalid input. setting to default of 20.");
-            return 20;
+            return defultNumber;
         }else{
             //returns value without characters
             return numberValue;
