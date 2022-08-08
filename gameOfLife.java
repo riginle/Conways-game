@@ -40,7 +40,9 @@ public class gameOfLife
     boolean selectionScreen = false;
     boolean menuScreen = true;
     int timerInput;
-    int[][] future;
+    //future is the array which has gone through the conways rules
+    int[][] future; 
+    //board is the array which has not gone through conways rules 
     int board[][];
     String aliveInput;
     int countDead;
@@ -62,6 +64,9 @@ public class gameOfLife
 
         while (seedSelection == true){
             keyInput = keyboardIn.nextLine().toLowerCase();
+            
+            //if yes is slected the board will be filled by the config of the text file by calling to the trySeedFile method, 
+            //before doing that the user is given the option of how big the board is.
             if (keyInput.equalsIgnoreCase("yes")){
                 slowPrint("How many rows and columns do you want? only input one number. if it is smaller dimensions than the seed it will not work.");
                 Scanner keyboardIn = new Scanner(System.in);
@@ -75,6 +80,7 @@ public class gameOfLife
                 printBoard( board, Rows, Columns);
                 seedSelection = false;
             }
+            //if no is input the user will be asked the grid size and then it will print the board and while doing so fill it randonmly with dead or alive cells by calling to printRandBoard
             else if(keyInput.equalsIgnoreCase("no")){
                 slowPrint("How many rows and columns do you want? only input one number.");
                 Scanner keyboardIn = new Scanner(System.in);
@@ -87,8 +93,9 @@ public class gameOfLife
                 printRandBoard( board, Rows, Columns);
                 seedSelection = false;
             }
+            //this is in case neither yes or no is input, and will tell the player it is not an option, then they can try again to input somthing valid 
             else {
-                slowPrint("Invalid command");
+                slowPrint("Invalid command, please input yes or no");
             }
         }
 
@@ -96,14 +103,15 @@ public class gameOfLife
 
             slowPrint("Do you want to enter selection screen? type yes if, yes. no if, no. if you want to quit the program, quit");
             keyInput = keyboardIn.nextLine().toLowerCase();
+            //if slected brings player to the selectionScreen 
             if (keyInput.equalsIgnoreCase("yes")){
                 selectionScreen = true;
             }
-
+            //if slected moves on to other inputs
             else if(keyInput.equalsIgnoreCase("no")){
                 nextGeneration(board, Columns, Rows);
             }
-
+            //if slected closes the game
             else if (keyInput.equalsIgnoreCase("quit")){
                 menuScreen = false;
                 return;
@@ -120,7 +128,9 @@ public class gameOfLife
                 slowPrint("Please select column: ");
                 int columnSelection = removeChar(keyboardIn.nextLine());
                 keyboardIn.nextLine();
-
+                
+                
+                
                 if (board[rowSelection-1][columnSelection-1] == 0){
                     board[rowSelection-1][columnSelection-1] = 1;
                 }
@@ -176,11 +186,13 @@ public class gameOfLife
                 return;
 
             }
+            
+            // this line takes the information from the prevoius future array and puts into the board array. 
             board = future;
 
         }
     }
-
+    // this method is so I can cause a time delay between generations, this delay is set to a varible "timerInput" which the user can set to a value they want 
     void timeWaitBetweenGens(){
         try {
             TimeUnit.MILLISECONDS.sleep(timerInput);
@@ -199,6 +211,7 @@ public class gameOfLife
             {
 
                 int aliveNeighbours = 0;
+                // alive neigbhours is cells which are alive near a selected cell 
                 for (int yModifer= -1; yModifer<= 1; yModifer++)
                     for (int xModifer = -1; xModifer <= 1; xModifer++)
                         if ((y+yModifer>=0 && y+yModifer<Rows) && (x+xModifer>=0 && x+xModifer<Columns)){
@@ -319,13 +332,13 @@ public class gameOfLife
         String numberOnly = stringInput.replaceAll("[^0-9]","");
         if(numberOnly.equals("")){
             //if value is invalid/lesser than 0, returns safe number of 20
-            System.out.println("Invalid input. setting to default of 20.");
+            System.out.println("Invalid input. setting to default of" +defultNumber);
             return defultNumber;
         }
         int numberValue = Integer.parseInt(numberOnly);
         if(numberValue <= 0){
             //if value is invalid/lesser than 0, returns safe number of 20
-            System.out.println("Invalid input. setting to default of 20.");
+            System.out.println("Invalid input. setting to default of" +defultNumber);
             return defultNumber;
         }else{
             //returns value without characters
