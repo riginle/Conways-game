@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=gameOfLife
-comment0.text=\r\n\ Write\ a\ description\ of\ class\ gameOfLife\ here.\r\n\r\n\ @author\ (Leonardo\ Riginelli)\r\n\ @version\ (15/08/2022)\r\n
+comment0.text=\r\n\ \r\n\r\n\ @author\ (Leonardo\ Riginelli)\r\n\ @version\ (1.12\ FINAL\ 16/08/2022)\r\n\ slow\ print\ code\ is\ by\:\ plscodeinjava\ \ on\ replit\ https\://replit.com/talk/learn/Slow-Print-tutorial-for-JAVA/51697\r\n\ \r\n\ What\:\r\n\ My\ project\ is\ based\ on\ Conway's\ game\ of\ life,\r\n\ which\ is\ a\ cellular\ automaton,\ \r\n\ meaning\ that\ its\ evolution\ is\ determined\ by\ its\ initial\ state.\ \r\n\ My\ version\ will\ contain\ a\ multiple\ player\ options.\r\n\ \r\n
 comment1.params=
 comment1.target=gameOfLife()
 comment10.params=stringInput

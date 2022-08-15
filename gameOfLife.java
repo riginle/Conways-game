@@ -10,14 +10,22 @@ import java.io.*;
 import java.util.*;
 import java.lang.Object;
 /*
- * Write a description of class gameOfLife here.
+ * 
  *
  * @author (Leonardo Riginelli)
- * @version (15/08/2022)
+ * @version (1.12 FINAL 16/08/2022)
+ * slow print code is by: plscodeinjava  on replit https://replit.com/talk/learn/Slow-Print-tutorial-for-JAVA/51697
+ * 
+ * What:
+ * My project is based on Conway's game of life,
+ * which is a cellular automaton, 
+ * meaning that its evolution is determined by its initial state. 
+ * My version will contain a multiple player options.
+ * 
  */
 public class gameOfLife
 {
-    
+
     Random rand = new Random();
     //testing board
     // int[][] board =
@@ -52,9 +60,9 @@ public class gameOfLife
     int rows;
     Scanner keyboardIn ;
     boolean seedSelection = true; 
-    
+
     public gameOfLife() {
-        
+
         //clears screen
         System.out.println('\u000c');
         board = new int[rows][columns];
@@ -64,11 +72,11 @@ public class gameOfLife
         slowPrint("\nEvery cell interacts with it the cells near it at each step in time (generation)\nThese are the possible interactions:\nNearby cells are neighbors.\nAny live cell with fewer than two live neighbours dies, by underpopulation.\nAny live cell with two or three live neighbours lives on to the next generation.\nAny live cell with more than three live neighbours dies, by overpopulation.\nAny dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.\n\nSEED: if you select the option seed the grid's population configuration \nwill be the same as that within the text file in the CONWAY'S game file. If not the population will be randomly generated.");
         slowPrint("\nWould you like to use a seed?");
         keyboardIn = new Scanner(System.in);
-        
+
         //this code is to let you choose between two board population methods
         while (seedSelection == true){
             keyInput = keyboardIn.nextLine().toLowerCase();
-            
+
             //if yes is selected the board will be filled by the config of the text file by calling to the trySeedFile method, 
             //before doing that the user is given the option of how big the board is.
             if (keyInput.equalsIgnoreCase("yes")){
@@ -125,7 +133,7 @@ public class gameOfLife
                 slowPrint("Invalid command");
             }
             System.out.println();
-            
+
             // allows the player to switch the state of a cell
             while (selectionScreen == true){
                 //the playe chooses the cell by stating the row and colomn its in
@@ -134,8 +142,7 @@ public class gameOfLife
                 slowPrint("Please select column: ");
                 int columnselection = removeChar(keyboardIn.nextLine());
                 keyboardIn.nextLine();
-                
-                
+
                 //siwtches sate of selected cell
                 //(-1 because the grid starts at co ords 0,0 instead of usual 1,1
                 if (board[rowselection-1][columnselection-1] == 0){
@@ -176,12 +183,12 @@ public class gameOfLife
 
         slowPrint("How many miliseconds between generations would you like?");
         timerInput = removeChar(keyboardIn.nextLine());
-        
+
         //this code goes through a set amount of times (genInput) and each time, uses the time delay,
         //prints how many gens have past and then sends the board information through the conways rules
         //then prints the future grid
         //then if the baord and future are the same later going through the conwyas rules youll be sent out of the loop
-    
+
         for (int Gen = 0; Gen < genInput; Gen++)
         {
 
@@ -199,7 +206,7 @@ public class gameOfLife
                 return;
 
             }
-            
+
             // this line takes the information from the prevoius future array and puts into the board array. 
             board = future;
 
@@ -233,8 +240,8 @@ public class gameOfLife
                             aliveNeighbours += board[y+ yModifer][x+ xModifer];
                         }
                 //sub self form total
-                        aliveNeighbours -= board[y][x];
-            
+                aliveNeighbours -= board[y][x];
+
                 //there are 4 rules to conways game of life
                 //Any live cell with fewer than two live neighbours dies, as if by underpopulation.
                 //Any live cell with two or three live neighbours lives on to the next generation.
@@ -279,7 +286,7 @@ public class gameOfLife
     public static void slowPrint(String output) {
         // this is for making text print out slower
         // it was taken from the internet i do not understand how it works (it just looks nice)
-        //
+        //credit is given at rhe top
         for (int i = 0; i<output.length(); i++) {
             char c = output.charAt(i);
             System.out.print(c);
@@ -292,14 +299,10 @@ public class gameOfLife
     }
     //for the seed print 
     //goes through board and prints it
-    void printBoard (int board[][], int rows, int columns){
-        //board = new int[rows][columns];
-        
+    void printBoard (int board[][], int rows, int columns){        
         //nested loop which prints out the bored
         for(int yModifer= 0; yModifer<columns; yModifer++){
             for(int xModifer = 0; xModifer<rows; xModifer++){
-                //board[yModifer][xModifer] = (rand.nextInt(2))*(rand.nextInt(2));
-                
                 slowPrint(board [yModifer] [xModifer] + "  ");
             }
             System.out.println();
@@ -309,7 +312,6 @@ public class gameOfLife
     //for the random print
     //nested loop which randomly fills the baorded with a 1 or 0 then prints it out
     void printRandBoard (int board[][], int rows, int columns){
-        //board = new int[rows][columns];
         for(int yModifer= 0; yModifer<columns; yModifer++){
             for(int xModifer = 0; xModifer<rows; xModifer++){
                 board[yModifer][xModifer] = (rand.nextInt(2))*(rand.nextInt(2));
@@ -319,7 +321,7 @@ public class gameOfLife
         }
         System.out.println();
     }
-
+    //This code is used to take the population information from the ConwaysFile text file.
     void trySeedFile(){
         //defines file
         File seed = new File("ConwaysFile.txt");
@@ -343,7 +345,7 @@ public class gameOfLife
             e.printStackTrace();
         }
     }
-
+    //this code is for invalid cases 
     int removeChar(String stringInput){
         defultNumber = 20;
         //removes all values that aren't between 0-9
