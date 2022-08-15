@@ -9,20 +9,17 @@ import java.io.IOException;
 import java.io.*;
 import java.util.*;
 import java.lang.Object;
-/**
+/*
  * Write a description of class gameOfLife here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author (Leonardo Riginelli)
+ * @version (15/08/2022)
  */
 public class gameOfLife
 {
-    // instance variables - replace the example below with your own
+    
     Random rand = new Random();
-
-    String Alive = "X";
-    String Death = " ";
-
+    //testing board
     // int[][] board =
     // { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },    
     // { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },    
@@ -51,110 +48,121 @@ public class gameOfLife
     int numberFix;
     int size = 5;
     String keyInput;
-    int Columns;
-    int Rows;
+    int columns;
+    int rows;
     Scanner keyboardIn ;
     boolean seedSelection = true; 
-
+    
     public gameOfLife() {
+        
+        //clears screen
         System.out.println('\u000c');
-        board = new int[Rows][Columns];
-        slowPrint("Would you like to use a seed?");
+        board = new int[rows][columns];
+        //explaining the game works 
+        slowPrint("How it works:");
+        slowPrint("This is a Version of the game The Game Of Life in which a grid full of cells \nwhich are either dead or alive will interact with each other.");
+        slowPrint("\nEvery cell interacts with it the cells near it at each step in time (generation)\nThese are the possible interactions:\nNearby cells are neighbors.\nAny live cell with fewer than two live neighbours dies, by underpopulation.\nAny live cell with two or three live neighbours lives on to the next generation.\nAny live cell with more than three live neighbours dies, by overpopulation.\nAny dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.\n\nSEED: if you select the option seed the grid's population configuration \nwill be the same as that within the text file in the CONWAY'S game file. If not the population will be randomly generated.");
+        slowPrint("\nWould you like to use a seed?");
         keyboardIn = new Scanner(System.in);
-
+        
+        //this code is to let you choose between two board population methods
         while (seedSelection == true){
             keyInput = keyboardIn.nextLine().toLowerCase();
             
-            //if yes is slected the board will be filled by the config of the text file by calling to the trySeedFile method, 
+            //if yes is selected the board will be filled by the config of the text file by calling to the trySeedFile method, 
             //before doing that the user is given the option of how big the board is.
             if (keyInput.equalsIgnoreCase("yes")){
                 slowPrint("How many rows and columns do you want? only input one number. if it is smaller dimensions than the seed it will not work.");
                 Scanner keyboardIn = new Scanner(System.in);
                 System.out.println();
-                Columns = removeChar(keyboardIn.nextLine());
-                Rows = Columns;
+                columns = removeChar(keyboardIn.nextLine());
+                rows = columns;
                 slowPrint("This is the board");
                 System.out.println();
-                board = new int[Rows][Columns];
+                board = new int[rows][columns];
                 trySeedFile();
-                printBoard( board, Rows, Columns);
+                printBoard( board, rows, columns);
                 seedSelection = false;
             }
-            //if no is input the user will be asked the grid size and then it will print the board and while doing so fill it randonmly with dead or alive cells by calling to printRandBoard
+            //if no is input the user will be asked the grid size and then it will print the board and while doing so fill it randomly with dead or alive cells by calling to printRandBoard
             else if(keyInput.equalsIgnoreCase("no")){
                 slowPrint("How many rows and columns do you want? only input one number.");
                 Scanner keyboardIn = new Scanner(System.in);
                 System.out.println();
-                Columns = removeChar(keyboardIn.nextLine());
-                Rows = Columns;
+                columns = removeChar(keyboardIn.nextLine());
+                rows = columns;
                 slowPrint("This is the board");
                 System.out.println();
-                board = new int[Rows][Columns];
-                printRandBoard( board, Rows, Columns);
+                board = new int[rows][columns];
+                printRandBoard( board, rows, columns);
                 seedSelection = false;
             }
-            //this is in case neither yes or no is input, and will tell the player it is not an option, then they can try again to input somthing valid 
+            //this is in case neither yes nor no is input, and will tell the player it is not an option, then they can try again to input somthing valid 
             else {
                 slowPrint("Invalid command, please input yes or no");
             }
         }
-
+        //this code allows the player to choose if they want to enter selection screen
         while (menuScreen == true){
-
-            slowPrint("Do you want to enter selection screen? type yes if, yes. no if, no. if you want to quit the program, quit");
+            slowPrint("Selection screen will allow you to switch the state of a cell");
+            slowPrint("\nDo you want to enter selection screen? type yes if, yes. no if, no. if you want to quit the program, quit");
             keyInput = keyboardIn.nextLine().toLowerCase();
             //if slected brings player to the selectionScreen 
             if (keyInput.equalsIgnoreCase("yes")){
                 selectionScreen = true;
             }
-            //if slected moves on to other inputs
+            //if selected moves on to other inputs
             else if(keyInput.equalsIgnoreCase("no")){
-                nextGeneration(board, Columns, Rows);
+                nextGeneration(board, columns, rows);
             }
-            //if slected closes the game
+            //if selected closes the game
             else if (keyInput.equalsIgnoreCase("quit")){
                 menuScreen = false;
                 return;
             }
             else {
+                //
                 slowPrint("Invalid command");
             }
             System.out.println();
-
+            
+            // allows the player to switch the state of a cell
             while (selectionScreen == true){
-
+                //the playe chooses the cell by stating the row and colomn its in
                 slowPrint("Please select row: ");
-                int rowSelection = removeChar(keyboardIn.nextLine());
+                int rowselection = removeChar(keyboardIn.nextLine());
                 slowPrint("Please select column: ");
-                int columnSelection = removeChar(keyboardIn.nextLine());
+                int columnselection = removeChar(keyboardIn.nextLine());
                 keyboardIn.nextLine();
                 
                 
-                
-                if (board[rowSelection-1][columnSelection-1] == 0){
-                    board[rowSelection-1][columnSelection-1] = 1;
+                //siwtches sate of selected cell
+                //(-1 because the grid starts at co ords 0,0 instead of usual 1,1
+                if (board[rowselection-1][columnselection-1] == 0){
+                    board[rowselection-1][columnselection-1] = 1;
                 }
                 else
                 {
-                    board[rowSelection-1][columnSelection-1] = 0;
+                    board[rowselection-1][columnselection-1] = 0;
 
                 }
-                for(int yModifer= 0; yModifer<Columns; yModifer++){
-                    for(int xModifer = 0; xModifer<Rows; xModifer++){
+                //prints out the edited board 
+                for(int yModifer= 0; yModifer<columns; yModifer++){
+                    for(int xModifer = 0; xModifer<rows; xModifer++){
                         System.out.print(board [yModifer] [xModifer] + "  ");
                     }
                     System.out.println();
                 }
                 System.out.println();
-
+                //turns off and allows the player to choose again
                 selectionScreen=false;
             }
 
         }            
-        nextGeneration(board, Columns, Rows);
+        nextGeneration(board, columns, rows);
     }
-
-    public void nextGeneration(int board[][], int Rows, int Columns)
+    //this code is for some additional inputs and funning the gen loop
+    public void nextGeneration(int board[][], int rows, int columns)
     {
         Scanner keyboardIn = new Scanner(System.in);
 
@@ -168,7 +176,12 @@ public class gameOfLife
 
         slowPrint("How many miliseconds between generations would you like?");
         timerInput = removeChar(keyboardIn.nextLine());
-
+        
+        //this code goes through a set amount of times (genInput) and each time, uses the time delay,
+        //prints how many gens have past and then sends the board information through the conways rules
+        //then prints the future grid
+        //then if the baord and future are the same later going through the conwyas rules youll be sent out of the loop
+    
         for (int Gen = 0; Gen < genInput; Gen++)
         {
 
@@ -177,9 +190,9 @@ public class gameOfLife
             System.out.println('\u000c');
             System.out.println("There are " + Gen + " Generations");
 
-            conwaysRules(board, Rows, Columns);
+            conwaysRules(board, rows, columns);
 
-            printAlive(board, Rows, Columns);
+            printAlive(board, rows, columns);
 
             if (Arrays.deepEquals(board, future)){
                 slowPrint("Simulation over");
@@ -201,25 +214,27 @@ public class gameOfLife
 
         }
     }
-    
-    void conwaysRules(int board[][], int Rows, int Columns){
-        future = new int[Rows][Columns];
+    // this code is for applying comways rules to the board
+    void conwaysRules(int board[][], int rows, int columns){
+        future = new int[rows][columns];
 
-        for (int y= 0; y< Rows; y++)
+        for (int y= 0; y< rows; y++)
         {
-            for (int x= 0; x< Columns; x++)
+            for (int x= 0; x< columns; x++)
             {
 
                 int aliveNeighbours = 0;
                 // alive neigbhours is cells which are alive near a selected cell 
+                //adds all living cells to total
                 for (int yModifer= -1; yModifer<= 1; yModifer++)
                     for (int xModifer = -1; xModifer <= 1; xModifer++)
-                        if ((y+yModifer>=0 && y+yModifer<Rows) && (x+xModifer>=0 && x+xModifer<Columns)){
+                        if ((y+yModifer>=0 && y+yModifer<rows) && (x+xModifer>=0 && x+xModifer<columns)){
 
                             aliveNeighbours += board[y+ yModifer][x+ xModifer];
                         }
-                aliveNeighbours -= board[y][x];
-
+                //sub self form total
+                        aliveNeighbours -= board[y][x];
+            
                 //there are 4 rules to conways game of life
                 //Any live cell with fewer than two live neighbours dies, as if by underpopulation.
                 //Any live cell with two or three live neighbours lives on to the next generation.
@@ -244,9 +259,9 @@ public class gameOfLife
     }
     //this method uses a nested loop to go through future board then looks if a cell is a 1, if so it will print with the string varible in place of the 1, if a 0 it will leave the space empty
     //it prints out the alive cells and leaves the dead cells empty 
-    void printAlive(int board[][], int Rows, int Columns){
-        for(int yModifer = 0; yModifer<Columns; yModifer++){
-            for(int xModifer = 0; xModifer<Rows; xModifer++){
+    void printAlive(int board[][], int rows, int columns){
+        for(int yModifer = 0; yModifer<columns; yModifer++){
+            for(int xModifer = 0; xModifer<rows; xModifer++){
 
                 if(future[yModifer][xModifer] == 1){
                     System.out.print(aliveInput +" ");
@@ -263,7 +278,8 @@ public class gameOfLife
     //used to make the text printing look nicer
     public static void slowPrint(String output) {
         // this is for making text print out slower
-        // it was taken from the internet i do not understand how it works (it just looks nice)        
+        // it was taken from the internet i do not understand how it works (it just looks nice)
+        //
         for (int i = 0; i<output.length(); i++) {
             char c = output.charAt(i);
             System.out.print(c);
@@ -276,12 +292,14 @@ public class gameOfLife
     }
     //for the seed print 
     //goes through board and prints it
-    void printBoard (int board[][], int Rows, int Columns){
-        //board = new int[Rows][Columns];
+    void printBoard (int board[][], int rows, int columns){
+        //board = new int[rows][columns];
+        
         //nested loop which prints out the bored
-        for(int yModifer= 0; yModifer<Columns; yModifer++){
-            for(int xModifer = 0; xModifer<Rows; xModifer++){
+        for(int yModifer= 0; yModifer<columns; yModifer++){
+            for(int xModifer = 0; xModifer<rows; xModifer++){
                 //board[yModifer][xModifer] = (rand.nextInt(2))*(rand.nextInt(2));
+                
                 slowPrint(board [yModifer] [xModifer] + "  ");
             }
             System.out.println();
@@ -290,10 +308,10 @@ public class gameOfLife
     }
     //for the random print
     //nested loop which randomly fills the baorded with a 1 or 0 then prints it out
-    void printRandBoard (int board[][], int Rows, int Columns){
-        //board = new int[Rows][Columns];
-        for(int yModifer= 0; yModifer<Columns; yModifer++){
-            for(int xModifer = 0; xModifer<Rows; xModifer++){
+    void printRandBoard (int board[][], int rows, int columns){
+        //board = new int[rows][columns];
+        for(int yModifer= 0; yModifer<columns; yModifer++){
+            for(int xModifer = 0; xModifer<rows; xModifer++){
                 board[yModifer][xModifer] = (rand.nextInt(2))*(rand.nextInt(2));
                 slowPrint(board [yModifer] [xModifer] + "  ");
             }
